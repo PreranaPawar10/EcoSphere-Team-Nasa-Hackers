@@ -1,11 +1,12 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /app/ecosphere
 
-COPY package*.json ./
+COPY app/ecosphere/package*.json ./
+RUN apk add --no-cache python3 make g++ gcc
 RUN npm install
 
-COPY . .
+COPY app/ecosphere/ ./
 
 EXPOSE 5173
 
