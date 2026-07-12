@@ -1,40 +1,43 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
-
 from sqlalchemy import create_engine
-
 from sqlalchemy.orm import sessionmaker
 
 
-load_dotenv()
+# backend/ directory
+backend_directory = Path(__file__).resolve().parents[2]
 
+# backend/.env
+env_path = backend_directory / ".env"
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+load_dotenv(env_path)
+
+database_url = os.getenv("DATABASE_URL")
+
+if not database_url:
+    raise ValueError(
+        f"DATABASE_URL is missing. Add it to {env_path}"
+    )
 
 
 engine = create_engine(
-    DATABASE_URL,
-    echo=True
+    database_url,
+    pool_pre_ping=True,
 )
 
-
 SessionLocal = sessionmaker(
-    autoflush=False,
     autocommit=False,
-    bind=engine
+    autoflush=False,
+    bind=engine,
 )
 
 
 def get_db():
-    """
-    Dependency used by FastAPI routes.
-    Provides a database session and ensures it is closed.
-    """
     db = SessionLocal()
 
     try:
         yield db
-
     finally:
         db.close()
