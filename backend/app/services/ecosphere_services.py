@@ -52,6 +52,9 @@ esg_policy_service = BaseService(esg_policy_crud)
 badge_service = BaseService(badge_crud)
 reward_service = BaseService(reward_crud)
 csr_activity_service = BaseService(csr_activity_crud)
+carbon_transaction_service = BaseService(
+    carbon_transaction_crud
+)
 employee_participation_service = BaseService(
     employee_participation_crud
 )
